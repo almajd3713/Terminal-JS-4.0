@@ -6,7 +6,8 @@ Will hopefully utilize diff approaches than the broken stuff I thought works wel
 
 ### Checklist
 - [ ] Core functionality
-  - [ ] Event creator, subscriber, and triggerer
+  - [ ] VM manager
+  - [ ] tasks and phases (task groups)
 - [ ] Common base functions
   - [ ] print
   - [ ] input
@@ -15,6 +16,8 @@ Will hopefully utilize diff approaches than the broken stuff I thought works wel
   - [ ] Virtual filesystem manager (mostly a class)
   - [ ] File actions
   - [ ] Path parsing and manipulation
+    - [ ] Base manipulation and path retrieval and comparison
+    - [ ] Flags and parameter parsing
   - [ ] Default commands
 - [ ] Auth
   - [ ] Username/Login system/command
