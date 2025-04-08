@@ -8,6 +8,7 @@ export class VM {
   private ui: TerminalUI
   private helper: TaskHelper
   private tasks: TaskList = {}
+  private isExecuting: boolean = false
   constructor(ui: TerminalUI) {
     this.helper = new TaskHelper(ui)
   }
@@ -30,6 +31,11 @@ export class VM {
   }
 
   public executeTask(name: string) {
+    if (this.isExecuting) {
+      console.warn("Another task is already executing. Please wait.");
+      return;
+    }
+    this.isExecuting = true;
     const task = this.tasks[name];
     if (!task) {
       throw new Error(`Task "${name}" not found.`);
@@ -39,5 +45,6 @@ export class VM {
     } catch (error) {
       console.error(`Error executing task "${name}":`, error);
     }
+    this.isExecuting = false;
   }
 }

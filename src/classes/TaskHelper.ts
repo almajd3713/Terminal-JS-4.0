@@ -8,7 +8,7 @@ export class TaskHelper  {
     this.ui.print(message, type)
   }
 
-  public async input(message: string, onSubmit: (answer: string) => void) {
+  public async input(message: string, onSubmit: (answer: string) => Promise<any> | void) {
     const answer = await new Promise<string>(resolve => {
       this.ui.input(message, (val: string) => {
         resolve(val)
@@ -18,7 +18,7 @@ export class TaskHelper  {
   }
 
   public cmd(currentPath?: string, onSubmit?: (answer: string) => void) {
-
+    
   }
   
   public async sleep(ms: number) {
