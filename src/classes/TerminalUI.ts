@@ -3,12 +3,12 @@ import { util } from '../util.js'
 
 export class TerminalUI {
   private prefix = "> "
-  constructor(public target: HTMLElement, prefix?: string) {
+  constructor(private target: HTMLElement, prefix?: string) {
     if(prefix) this.prefix = prefix
     this.target.appendChild(util.defaultStyleGen(this.target.id))
   }
 
-  public print(message: string, type?: MessageTypes) {
+  async print(message: string, type?: MessageTypes) {
     let el = util.genElement('print', { textContent: message }, type)
     this.target.appendChild(el)
     el.scrollIntoView({ behavior: 'smooth' })

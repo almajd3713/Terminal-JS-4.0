@@ -1,28 +1,15 @@
-import { MessageTypes } from "../types";
-import { TerminalUI } from "./TerminalUI";
+import { TaskHelper } from "./TaskHelper";
 
 
-class Task {
-  private ctx: TaskContext
-  constructor() {}
-}
-
-class TaskContext  {
-  constructor(private ui: TerminalUI) {}
-
-  public print(message: string, type?: MessageTypes) {
-
-  }
-
-  public input(message: string, onSubmit: (answer: string) => void) {
-
-  }
-
-  public cmd(currentPath?: string, onSubmit?: (answer: string) => void) {
-
-  }
-  
-  public async sleep(ms: number) {
-    return new Promise(resolve => setTimeout(resolve, ms))
+export class Task {
+  public execute: Function
+  constructor(action: (helper: TaskHelper) => Promise<any>) {
+    this.execute = (helper: TaskHelper) => new Promise((resolve, reject) => {
+      try {
+        resolve(action(helper))
+      } catch (error) {
+        reject(error)
+      }
+    })
   }
 }
