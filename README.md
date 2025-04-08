@@ -5,12 +5,13 @@ My fourth (yeah...) rewrite of this thing. Main motivation is to use it in the E
 Will hopefully utilize diff approaches than the broken stuff I thought works well in the past (it didn't lol)
 
 ### Checklist
-- [ ] Core functionality
-  - [ ] VM manager
-  - [ ] tasks and phases (task groups)
-- [ ] Common base functions
-  - [ ] print
-  - [ ] input
+- [X] Core functionality
+  - [X] VM manager
+  - [X] tasks 
+- [X] Common base functions
+  - [X] print
+  - [X] input
+  - [X] Terminal reset
 - [ ] File system
   - [ ] cmd function
   - [ ] Virtual filesystem manager (mostly a class)
@@ -23,5 +24,7 @@ Will hopefully utilize diff approaches than the broken stuff I thought works wel
   - [ ] Username/Login system/command
     - [ ] Utilizing hash comparison and verification this time
   - [ ] Authorization checks when needed
-- [ ] Misc
-  - [ ] Terminal reset
+
+
+### Notes
+- Positioning `helper.cmd` is tricky and may cause sync issues if not properly used. Use it only at the end.
