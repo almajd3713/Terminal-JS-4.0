@@ -37,7 +37,6 @@ export class VirtualFileSystem {
       path: this.pathParser.stringify(parsedPath),
       dir
     }
-    console.log(this.cursor)
   }  
 
   static fromTree(tree: IFileTree | IFileTree[]): VirtualFileSystem {
@@ -66,7 +65,6 @@ export class VirtualFileSystem {
       output = `${file.name}/${output}`
     }
     output = `${file.name}:/${output}`
-    console.log(output)
     return output
   }
   getCursorPath() {

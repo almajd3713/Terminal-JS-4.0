@@ -12,12 +12,10 @@ export class FileSystemParser {
       
     const isAbsolute = path.startsWith('/') || /^[a-zA-Z]:[\\/]/.test(path);
 
-    console.log(path)
     const segments = path
       .split('/')
       .filter(seg => seg !== '' && seg !== '.')
       .reduce<IPathSegment[]>((acc, seg, index) => {
-        console.log(path, acc, seg)
         if(index === 0) seg = seg.replace(/:$/, '')
         if (seg === '..') acc.pop();
         else acc.push({ name: seg });
