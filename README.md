@@ -12,14 +12,14 @@ Will hopefully utilize diff approaches than the broken stuff I thought works wel
   - [X] print
   - [X] input
   - [X] Terminal reset
-- [ ] File system
+- [X] File system
   - [X] cmd function
   - [X] Virtual filesystem manager (mostly a class)
-  - [ ] File actions
+  - [X] File actions
   - [X] Path parsing and manipulation
     - [ ] Base manipulation and path retrieval and comparison
     - [X] Flags and parameter parsing
-  - [ ] Default commands
+  - [X] Default commands
 - [ ] Auth
   - [ ] Username/Login system/command
     - [ ] Utilizing hash comparison and verification this time
