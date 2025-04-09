@@ -1,15 +1,19 @@
-import { VirtualFileSystem } from "../filesystem/FileSystem";
+import { Folder, VirtualFileSystem } from "../filesystem/FileSystem.js";
+import { TaskHelper } from "../TaskHelper.js";
 import { TerminalUI } from "../TerminalUI";
 import { ICommand } from "./types";
 
 
-export default (ui: TerminalUI, fs: VirtualFileSystem): ICommand[] => [
+export default (): ICommand[] => [
   {
     name: 'ls',
     description: 'Shows files in current directory',
-    async action() {
+    async action(helper, args) {
       let output = ''
-      
+      for(const dir of helper.getCursor().getChildren()) {
+        output = `${output}  ${dir.name}${dir instanceof Folder && '(folder)'}`
+      }
+      await helper.print(output) 
     },
   }
 ]

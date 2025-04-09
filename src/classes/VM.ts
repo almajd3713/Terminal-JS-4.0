@@ -1,4 +1,5 @@
 import { TaskList } from "../types";
+import { TerminalCommandRepo } from "./commands/CommandRepo";
 import { VirtualFileSystem } from "./filesystem/FileSystem";
 import { Task } from "./Task";
 import { TaskHelper } from "./TaskHelper.js";
@@ -9,8 +10,12 @@ export class VM {
   private helper: TaskHelper
   private tasks: TaskList = {}
   private isExecuting: boolean = false
-  constructor(private ui: TerminalUI, private fileSystem: VirtualFileSystem) {
-    this.helper = new TaskHelper(ui, fileSystem);
+  constructor(
+    private ui: TerminalUI, 
+    private fileSystem: VirtualFileSystem,
+    private commandRepo: TerminalCommandRepo
+  ) {
+    this.helper = new TaskHelper(ui, fileSystem, commandRepo);
   }
 
   public addTask(name: string, description: string, task: Task) {

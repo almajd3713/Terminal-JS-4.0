@@ -29,7 +29,7 @@ export class TerminalUI {
       input.disabled = true
       input.classList.remove("isFocused")
       let val = input.value
-      if(!val || /\s/.test(val)){this.input(message, callback, isCMD); return}
+      if(!val || /^\s*$/.test(val)){this.input(message, callback, isCMD); return}
       callback(val)
     })
   }

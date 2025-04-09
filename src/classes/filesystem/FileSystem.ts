@@ -5,9 +5,30 @@ import { IFileTree } from "./types";
 export class VirtualFileSystem {
   private root: Folder[] = [];
   private pathParser: FileSystemParser = new FileSystemParser();
+  private _cursor: {
+    path: string,
+    dir: Folder
+  }
   constructor(root: Folder) {
     this.addRoot(root)
+    this._cursor = {
+      path: this.root[0].name,
+      dir: this.root[0]
+    }
   }
+  
+  public get cursor() : typeof this._cursor {
+    return this._cursor
+  }
+  public set cursor(newVal: string) {
+    const dir = this.checkValidPath(newVal)
+    if(!dir || !(dir instanceof Folder)) 
+      throw new Error("Directory doesn't exist or is a file")
+    this._cursor = {
+      path: newVal,
+      dir
+    }
+  }  
 
   static fromTree(tree: IFileTree | IFileTree[]): VirtualFileSystem {
     if (Array.isArray(tree)) {
@@ -60,12 +81,15 @@ export class VirtualFileSystem {
 
   checkValidPath(path: string) {
     let pathTree = this.pathParser.parse(path);
-    for(let tail of this.root) {
+    for(let rt of this.root) {
+      let tail = rt as Directory
       let currentPathTree = pathTree
       while(tail && currentPathTree && tail.name === currentPathTree.name) {
-        if(!currentPathTree.child) return true // Path exists to file
+        if(!currentPathTree.child) return tail // Path exists to FOLDER
+        if(tail instanceof Folder)
+          tail = tail.locateChildDirectory(currentPathTree.child.name)
+        else return tail // path exists to FILE
         currentPathTree = currentPathTree.child
-        tail = tail.locateChildDirectory(currentPathTree.name) as Folder
       }
     }
     return false
@@ -105,7 +129,7 @@ abstract class Directory {
   }
 }
 
-class File extends Directory {
+export class File extends Directory {
   private tree: Directory[] = [];
   constructor(fileName: string, private execute?: Function) {
     super(fileName);
@@ -117,7 +141,7 @@ class File extends Directory {
 }
 
 
-class Folder extends Directory {
+export class Folder extends Directory {
   private tree: Directory[] = [];
   constructor(folderName: string) {
     super(folderName);
@@ -182,5 +206,9 @@ class Folder extends Directory {
       }
     }
     return null;
+  }
+
+  getChildren() {
+    return this.tree
   }
 }

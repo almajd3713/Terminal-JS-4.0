@@ -1,7 +1,8 @@
 import { TaskInputArgs } from "../parser/types"
+import { TaskHelper } from "../TaskHelper"
 
 export interface ICommand {
   name: string
   description?: string
-  action: (args: TaskInputArgs) => Promise<any>
+  action: (helper: TaskHelper, args: TaskInputArgs) => Promise<any>
 }
