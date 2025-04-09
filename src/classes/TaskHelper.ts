@@ -45,6 +45,10 @@ export class TaskHelper  {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
 
+  public clear() {
+    this.ui.clear()
+  }
+
   //! FILESYS RELATED
   public getCursor() {
     return this.fileSystem.cursor.dir
@@ -55,9 +59,18 @@ export class TaskHelper  {
     } catch (error) {
       if(error instanceof VirtualFileSystemErrors.CantSetCursorToAFileError)
         throw new CommandErrors.CantCDToFile()
-      if(error instanceof VirtualFileSystemErrors.FolderDoesntExist)
+      if(error instanceof VirtualFileSystemErrors.FolderNotFoundError)
         throw error
     }
+  }
+
+  public async openFile(name: string, args: string[]) {
+    const file = this.fileSystem.locateFileRelativeByName(name)
+    if(!file)
+      throw new VirtualFileSystemErrors.FileNotFoundError
+    try {
+      await file.open(args)
+    } catch(error) {throw error}
   }
 
   //! MISC

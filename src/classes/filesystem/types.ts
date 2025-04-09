@@ -1,5 +1,6 @@
 export interface IFileTree {
   name: string;
-  children?: IFileTree[];
+  children?: IFileTree[],
+  onOpen?: Function
 }
 

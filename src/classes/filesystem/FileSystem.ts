@@ -1,5 +1,5 @@
 import { FileSystemParser } from "../parser/FileSystemParser.js";
-import { CantSetCursorToAFileError, FolderDoesntExist } from "./errors.js";
+import { CantSetCursorToAFileError, FileDoesntHaveCallbackError, FolderNotFoundError } from "./errors.js";
 import { IFileTree } from "./types";
 
 
@@ -30,7 +30,7 @@ export class VirtualFileSystem {
     isAbsolute ? this.checkValidPath(newVal)
     : this.checkValidPath(`${this.getCursorPath()}/${newVal}`)
     if(!dir) 
-      throw new FolderDoesntExist
+      throw new FolderNotFoundError
     if(!(dir instanceof Folder))
       throw new CantSetCursorToAFileError
     this._cursor = {
@@ -82,6 +82,14 @@ export class VirtualFileSystem {
       }
     }
     return null;
+  }
+
+  locateFileRelativeByName(name: string) {
+    for(const dir of this.cursor.dir.getChildren()) {
+      if(dir instanceof File)
+        if(dir.name === name) return dir
+    }
+    return null
   }
 
   locateFileParent(id: string) {
@@ -151,7 +159,8 @@ export class File extends Directory {
   }
 
   async open(args: string[]) {
-    await new Promise(resolve => resolve(this.execute ? this.execute(args) : undefined));
+    if(this.execute) await this.execute(args)
+    else throw new FileDoesntHaveCallbackError
   }
 }
 
@@ -173,7 +182,7 @@ export class Folder extends Directory {
     if(tree.children) for (const rt of tree.children) {
       const dir: Directory = 
         rt.children && rt.children.length > 0 ? new Folder(rt.name) : 
-        new File(rt.name);
+        new File(rt.name, rt.onOpen);
       this.tree.push(dir);
       if (rt.children) {
         if (dir instanceof Folder) {

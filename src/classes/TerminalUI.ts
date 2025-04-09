@@ -33,4 +33,8 @@ export class TerminalUI {
       callback(val)
     })
   }
+
+  clear() {
+    this.target.querySelectorAll(':scope > *:not(style)').forEach(el => el.remove());
+  }
 }

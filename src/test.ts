@@ -63,7 +63,7 @@ const bootup = new Task(async(helper) => {
   helper.print("Booting up...")
   await helper.sleep(1000)
   helper.print("Boot up complete.")
-  await helper.cmd('C:/home')
+  await helper.cmd()
 })
 
 const shutdown = new Task(async(helper) => {
