@@ -13,12 +13,12 @@ Will hopefully utilize diff approaches than the broken stuff I thought works wel
   - [X] input
   - [X] Terminal reset
 - [ ] File system
-  - [ ] cmd function
-  - [ ] Virtual filesystem manager (mostly a class)
+  - [X] cmd function
+  - [X] Virtual filesystem manager (mostly a class)
   - [ ] File actions
-  - [ ] Path parsing and manipulation
+  - [X] Path parsing and manipulation
     - [ ] Base manipulation and path retrieval and comparison
-    - [ ] Flags and parameter parsing
+    - [X] Flags and parameter parsing
   - [ ] Default commands
 - [ ] Auth
   - [ ] Username/Login system/command
