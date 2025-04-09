@@ -19,7 +19,9 @@ const fs1 = VirtualFileSystem.fromTree({
           name: "user",
           children: [
             { name: "documents", children: [
-              { name: "notes.txt" },
+              { name: "notes.txt", onOpen: async() => {
+                window.open('notes.txt')                
+              } },
               { name: "report.pdf" }
             ]},
             { name: "pictures", children: [
