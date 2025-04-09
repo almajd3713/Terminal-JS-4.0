@@ -2,6 +2,9 @@ import { MessageTypes } from "../types"
 import { TerminalCommandRepo } from "./commands/CommandRepo"
 import { VirtualFileSystem } from "./filesystem/FileSystem.js"
 import { TerminalUI } from "./TerminalUI.js"
+import * as VirtualFileSystemErrors from './filesystem/errors.js'
+import * as CommandErrors from './commands/errors.js'
+import { TaskInputArgs } from "./parser/types"
 
 export class TaskHelper  {
   constructor(
@@ -24,17 +27,18 @@ export class TaskHelper  {
     await onSubmit(answer)
   }
 
-  public async cmd(currentPath?: string) {
-    if(!this.fileSystem.checkValidPath(currentPath)) 
-      throw new Error("This path does not exisst");
-      
+  public async cmd() {      
+    const path = this.fileSystem.getCursorPath()
+      .split('/')
+      .map((seg, i) => i === 0 ? `${seg}:` : seg)
+      .join('/')
     const answer = await new Promise<string>(resolve => {
-      this.ui.input(currentPath, (ans) => resolve(ans), true)
+      this.ui.input(path , (ans) => resolve(ans), true)
     })
 
     await this.commandRepo.execute(answer, this)
 
-    await this.cmd(currentPath)
+    await this.cmd()
   }
   
   public async sleep(ms: number) {
@@ -44,5 +48,20 @@ export class TaskHelper  {
   //! FILESYS RELATED
   public getCursor() {
     return this.fileSystem.cursor.dir
+  }
+  public setCursor(newVal: string) {
+    try {
+      this.fileSystem.cursor = newVal
+    } catch (error) {
+      if(error instanceof VirtualFileSystemErrors.CantSetCursorToAFileError)
+        throw new CommandErrors.CantCDToFile()
+      if(error instanceof VirtualFileSystemErrors.FolderDoesntExist)
+        throw error
+    }
+  }
+
+  //! MISC
+  commandArgsCheck(comArgs: TaskInputArgs, length: number) {
+    return length === comArgs.args.length
   }
 }

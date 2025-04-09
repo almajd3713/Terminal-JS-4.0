@@ -1,4 +1,5 @@
 import { FileSystemParser } from "../parser/FileSystemParser.js";
+import { CantSetCursorToAFileError, FolderDoesntExist } from "./errors.js";
 import { IFileTree } from "./types";
 
 
@@ -21,13 +22,22 @@ export class VirtualFileSystem {
     return this._cursor
   }
   public set cursor(newVal: string) {
-    const dir = this.checkValidPath(newVal)
-    if(!dir || !(dir instanceof Folder)) 
-      throw new Error("Directory doesn't exist or is a file")
+    const isAbsolute = newVal.startsWith('/') || /^[a-zA-Z]:[\\/]/.test(newVal);
+    const parsedPath = 
+      isAbsolute ? this.pathParser.parse(newVal)
+      : this.pathParser.parse(`${this.getCursorPath()}/${newVal}`)
+    const dir = 
+    isAbsolute ? this.checkValidPath(newVal)
+    : this.checkValidPath(`${this.getCursorPath()}/${newVal}`)
+    if(!dir) 
+      throw new FolderDoesntExist
+    if(!(dir instanceof Folder))
+      throw new CantSetCursorToAFileError
     this._cursor = {
-      path: newVal,
+      path: this.pathParser.stringify(parsedPath),
       dir
     }
+    console.log(this.cursor)
   }  
 
   static fromTree(tree: IFileTree | IFileTree[]): VirtualFileSystem {
@@ -49,15 +59,20 @@ export class VirtualFileSystem {
     this.root.push(folder);
   }
 
-  // setFileTree(tree: IFileTree[]) {
-  //   for(const rt of tree) {
-  //     const folder = new Folder(rt.name);
-  //     this.root.push(folder);
-  //     if (rt.child) {
-  //       this.setFileTree(rt.child);
-  //     }
-  //   }
-  // }
+  getFilePath(file: Directory) {
+    let output = ''
+    while(file.getParent()) {
+      file = file.getParent()
+      output = `${file.name}/${output}`
+    }
+    output = `${file.name}:/${output}`
+    console.log(output)
+    return output
+  }
+  getCursorPath() {
+    // return this.getFilePath(this.cursor.dir)
+    return this.cursor.path
+  }
 
   locateFile(id: string) {
     for (const dir of this.root) {
