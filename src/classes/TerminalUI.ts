@@ -2,7 +2,7 @@ import { MessageTypes } from '../types'
 import { util } from '../util.js'
 
 export class TerminalUI {
-  private prefix = "> "
+  private prefix = ">"
   constructor(private target: HTMLElement, prefix?: string) {
     if(prefix) this.prefix = prefix
     this.target.appendChild(util.defaultStyleGen(this.target.id))
@@ -14,8 +14,11 @@ export class TerminalUI {
     el.scrollIntoView({ behavior: 'smooth' })
   }
 
-  input(message:string, callback: (answer: string) => void) {
-    let el = util.genElement("input", {textContent: message})
+  input(message:string, callback: (answer: string) => void, isCMD: boolean) {
+    let el = util.genElement("input", {
+      textContent: 
+        `${message}${isCMD && this.prefix}`
+    })
     this.target.appendChild(el)
     el.scrollIntoView({behavior: "smooth"})
     let input = el.querySelector("input")!
@@ -26,7 +29,7 @@ export class TerminalUI {
       input.disabled = true
       input.classList.remove("isFocused")
       let val = input.value
-      if(!val || /\s/.test(val)){this.input(message, callback); return}
+      if(!val || /\s/.test(val)){this.input(message, callback, isCMD); return}
       callback(val)
     })
   }
