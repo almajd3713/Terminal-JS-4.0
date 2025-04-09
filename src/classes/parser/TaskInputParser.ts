@@ -1,6 +1,4 @@
-
-
-class TaskInputParser {
+export class TaskInputParser {
   constructor() {}
 
   parse(input: string) {

@@ -15,7 +15,6 @@ export class FileSystemParser {
       .filter(seg => seg !== '' && seg !== '.')
       .reduce<IPathSegment[]>((acc, seg, index) => {
         if(index === 0) seg = seg.replace(/:$/, '')
-        console.log(seg)
         if (seg === '..') acc.pop();
         else acc.push({ name: seg });
         return acc;
